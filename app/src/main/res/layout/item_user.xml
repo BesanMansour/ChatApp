@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_margin="20dp"
+    android:layout_height="wrap_content">
+
+    <ImageView
+        android:id="@+id/ItemImg"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:background="@color/teal_200"
+        app:srcCompat="@drawable/ic_launcher_foreground" />
+
+    <TextView
+        android:id="@+id/ItemUserName"
+        android:layout_marginLeft="20dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="TextView"
+        android:layout_toRightOf="@+id/ItemImg"
+        android:layout_toEndOf="@id/ItemImg"
+        android:layout_centerVertical="true"
+        android:textSize="18sp"/>
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/ItemOn"
+        android:layout_width="15dp"
+        android:layout_height="15dp"
+        app:civ_border_width="10dp"
+        android:visibility="gone"
+        app:civ_border_color="#05df29"
+        android:src="@mipmap/ic_launcher"
+        android:layout_below="@id/ItemUserName"
+        android:layout_marginTop="10dp"
+        android:layout_marginLeft="15dp"
+        android:layout_toRightOf="@+id/ItemImg"
+        android:layout_toEndOf="@+id/ItemImg"/>
+
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/ItemOff"
+        android:layout_width="15dp"
+        android:layout_height="15dp"
+        app:civ_border_width="10dp"
+        android:visibility="gone"
+        app:civ_border_color="#bfbfbf"
+        android:src="@mipmap/ic_launcher"
+        android:layout_below="@id/ItemUserName"
+        android:layout_marginTop="10dp"
+        android:layout_marginLeft="15dp"
+        android:layout_toRightOf="@+id/ItemImg"
+        android:layout_toEndOf="@+id/ItemImg"/>
+
+    <TextView
+        android:id="@+id/ItemLastMsg"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/ItemUserName"
+        android:layout_toRightOf="@+id/ItemImg"
+        android:layout_marginTop="5dp"
+        android:textColor="@color/black"
+        android:layout_marginLeft="20dp"
+        android:maxLines="1"
+        />
+
+</RelativeLayout>
