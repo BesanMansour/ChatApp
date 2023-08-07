@@ -77,12 +77,6 @@ public class MessageActivity extends AppCompatActivity {
         Intent intent = getIntent();
         user_id =  intent.getStringExtra("user_id");
 
-        binding.MessageRecycler.setHasFixedSize(true);
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getApplicationContext());
-        linearLayoutManager.setStackFromEnd(true);
-        binding.MessageRecycler.setLayoutManager(linearLayoutManager);
-
-
         binding.MessageBtnSend.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -90,10 +84,10 @@ public class MessageActivity extends AppCompatActivity {
                 String message = binding.MessageET.getText().toString();
                 // 1 : من: sender
                 // 2 : الى:receiver
-                Toast.makeText(MessageActivity.this, "msg: "+message, Toast.LENGTH_SHORT).show();
-                boolean b = !message.equals("");
-                Toast.makeText(MessageActivity.this, "kakdj:"+b, Toast.LENGTH_SHORT).show();
                 if (!message.equals("")){
+                    Log.e("firebaseUser",firebaseUser.getUid());
+                    Log.e("user_id",user_id+"");
+                    Log.e("message",message);
                     sendMessage(firebaseUser.getUid(),user_id,message);
                 }else {
                     binding.MessageET.setError("يرجى ادخال هذا الحقل");
@@ -131,17 +125,13 @@ public class MessageActivity extends AppCompatActivity {
         seenMessage(user_id);
     }
     void sendMessage(String sender,String receiver,String message){
+
         DatabaseReference reference1 = FirebaseDatabase.getInstance().getReference();
 
-        Map<String, Object> data = new HashMap<>();
-        data.put("sender",sender);
-        data.put("receiver",receiver);
-        data.put("message",message);
-        data.put("isSeen",false);
 
-        Log.e("data",data.toString());
+        Chat chat = new Chat(sender,receiver,message,false);
 
-        reference1.child("Chats").push().setValue(data);
+        reference1.child("Chats").push().setValue(chat);
 
         //add user to chat fragment
        final DatabaseReference chatRef = FirebaseDatabase.getInstance()
@@ -150,8 +140,6 @@ public class MessageActivity extends AppCompatActivity {
         chatRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                boolean s = !snapshot.exists();
-                Toast.makeText(MessageActivity.this, "snap: "+s, Toast.LENGTH_SHORT).show();
                 if (!snapshot.exists()) {
                     chatRef.child("id").setValue(user_id);
                 }
@@ -232,6 +220,41 @@ public class MessageActivity extends AppCompatActivity {
         });
     }
 
+//    void readMessage(String myId, String userId, String imageURL) {
+//        chats = new ArrayList<>();
+//
+//        reference = FirebaseDatabase.getInstance().getReference("Chats");
+//        reference.addValueEventListener(new ValueEventListener() {
+//            @Override
+//            public void onDataChange(@NonNull DataSnapshot snapshot) {
+//                chats.clear();
+//                for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+//                    Chat chat = dataSnapshot.getValue(Chat.class);
+//
+//                    if (chat.getReceive() != null && chat.getSender() != null &&
+//                            (chat.getReceive().equals(myId) && chat.getSender().equals(userId)
+//                                    || chat.getReceive().equals(userId) && chat.getSender().equals(myId))) {
+//                        chats.add(chat);
+//                    }
+//                }
+//
+//                // Move the adapter setup outside the for loop
+//                messageAdapter = new MessageAdapter(getBaseContext(), chats, imageURL);
+//                binding.MessageRecycler.setAdapter(messageAdapter);
+////                binding.MessageRecycler.setHasFixedSize(true);
+////                binding.MessageRecycler.setLayoutManager(new LinearLayoutManager(getBaseContext()));
+//                // Call notifyDataSetChanged() after updating the data in the adapter
+////                messageAdapter.notifyDataSetChanged();
+//            }
+//
+//            @Override
+//            public void onCancelled(@NonNull DatabaseError error) {
+//
+//            }
+//        });
+//    }
+
+
     void readMessage(String myId, String userId, String imageURL) {
         chats = new ArrayList<>();
 
@@ -243,28 +266,43 @@ public class MessageActivity extends AppCompatActivity {
                 for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
                     Chat chat = dataSnapshot.getValue(Chat.class);
 
+                    Log.e("chatToString",chat.toString());
+
                     if (chat.getReceive() != null && chat.getSender() != null &&
                             (chat.getReceive().equals(myId) && chat.getSender().equals(userId)
                                     || chat.getReceive().equals(userId) && chat.getSender().equals(myId))) {
                         chats.add(chat);
                     }
+                    Log.e("myId",myId);
+                    Log.e("userId",userId);
+                    if (chat.getReceive() != null && chat.getSender() != null) {
+                        Log.e("receive",chat.getReceive().toString());
+                        Log.e("sender",chat.getSender().toString());
+                    }
+
                 }
 
-                // Move the adapter setup outside the for loop
+                Log.d("chats",chats.toString());
+                // Create the adapter and set it to the RecyclerView
                 messageAdapter = new MessageAdapter(getBaseContext(), chats, imageURL);
                 binding.MessageRecycler.setAdapter(messageAdapter);
-//                binding.MessageRecycler.setHasFixedSize(true);
-//                binding.MessageRecycler.setLayoutManager(new LinearLayoutManager(getBaseContext()));
-                // Call notifyDataSetChanged() after updating the data in the adapter
-//                messageAdapter.notifyDataSetChanged();
+                binding.MessageRecycler.setLayoutManager(new LinearLayoutManager(getBaseContext(),
+                        LinearLayoutManager.VERTICAL, false));
+                // Notify the adapter that data has changed
+                messageAdapter.notifyDataSetChanged();
+
+                // Scroll the RecyclerView to the last item (newest message)
+                binding.MessageRecycler.scrollToPosition(chats.size() - 1);
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
-
+                // Handle onCancelled
             }
         });
     }
+
+
     void seenMessage(final String userId){
         reference = FirebaseDatabase.getInstance().getReference("Chats");
 

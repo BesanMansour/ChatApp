@@ -2,6 +2,9 @@ package com.project.chatapp2;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentPagerAdapter;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -22,6 +25,7 @@ import com.project.chatapp2.Model.User;
 import com.project.chatapp2.Model.ViewPagerAdapter;
 import com.project.chatapp2.databinding.ActivityMainBinding;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 import Fragment.ChatsFragment;

@@ -47,4 +47,14 @@ public class Chat {
     public void setSeen(boolean seen) {
         isSeen = seen;
     }
+
+    @Override
+    public String toString() {
+        return "Chat{" +
+                "sender='" + sender + '\'' +
+                ", receive='" + receive + '\'' +
+                ", message='" + message + '\'' +
+                ", isSeen=" + isSeen +
+                '}';
+    }
 }
