@@ -17,7 +17,9 @@ import com.google.firebase.auth.FirebaseUser;
 import com.project.chatapp2.Model.Chat;
 import com.project.chatapp2.R;
 
+import java.text.SimpleDateFormat;
 import java.util.List;
+import java.util.Locale;
 
 public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHolder> {
     public static  final int MSG_TYPE_LEFT = 0;
@@ -55,12 +57,6 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
 
         holder.show_message.setText(chat.getMessage());
 
-        if (imageurl.equals("default")){
-            holder.profile_image.setImageResource(R.mipmap.ic_launcher);
-        } else {
-            Glide.with(mContext).load(imageurl).into(holder.profile_image);
-        }
-
         if (position == mChat.size()-1){
             if (chat.isSeen()){
                 holder.txt_seen.setText("Seen");
@@ -71,6 +67,20 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
             holder.txt_seen.setVisibility(View.GONE);
         }
 
+        // تحويل وتنسيق الوقت وعرضه في TextView المخصص للوقت
+        SimpleDateFormat sdf = new SimpleDateFormat("h:mm a", Locale.getDefault());
+        String formattedTime = sdf.format(chat.getTimeSent()); // تفترض أن لديك خاصية للوقت في كائن Chat
+        holder.timeText.setText(formattedTime);
+
+        if (position == mChat.size() - 1) {
+            if (chat.isSeen()) {
+                holder.txt_seen.setText("Seen");
+            } else {
+                holder.txt_seen.setText("");
+            }
+        } else {
+            holder.txt_seen.setVisibility(View.GONE);
+        }
     }
 
     @Override
@@ -81,15 +91,14 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
     public  class ViewHolder extends RecyclerView.ViewHolder{
 
         public TextView show_message;
-        public ImageView profile_image;
-        public TextView txt_seen;
+        public TextView txt_seen,timeText;
 
         public ViewHolder(View itemView) {
             super(itemView);
 
             show_message = itemView.findViewById(R.id.ItemChatshowMsg);
-            profile_image = itemView.findViewById(R.id.ItemChatImg);
             txt_seen = itemView.findViewById(R.id.ItemTxtSeen);
+            timeText = itemView.findViewById(R.id.ItemTimeTxt);
         }
     }
 

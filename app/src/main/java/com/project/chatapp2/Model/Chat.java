@@ -5,6 +5,7 @@ public class Chat {
     private String receive;
     private String message;
     private boolean isSeen;
+    private long timeSent; // إضافة هذا الحقل لتخزين الوقت
 
     public Chat() {
     }
@@ -14,6 +15,22 @@ public class Chat {
         this.receive = receive;
         this.message = message;
         this.isSeen = isSeen;
+    }
+
+    public Chat(String sender, String receive, String message, boolean isSeen, long timeSent) {
+        this.sender = sender;
+        this.receive = receive;
+        this.message = message;
+        this.isSeen = isSeen;
+        this.timeSent = timeSent;
+    }
+
+    public long getTimeSent() {
+        return timeSent;
+    }
+
+    public void setTimeSent(long timeSent) {
+        this.timeSent = timeSent;
     }
 
     public String getSender() {
@@ -55,6 +72,7 @@ public class Chat {
                 ", receive='" + receive + '\'' +
                 ", message='" + message + '\'' +
                 ", isSeen=" + isSeen +
+                ", timeSent=" + timeSent +
                 '}';
     }
 }

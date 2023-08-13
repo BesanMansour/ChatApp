@@ -18,23 +18,22 @@
             android:background="@color/teal_700"
             android:layout_height="wrap_content">
 
-
             <ImageView
                 android:id="@+id/MainProfileImage"
-                android:layout_width="60dp"
-                android:layout_height="60dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_margin="20dp"
-                tools:srcCompat="@tools:sample/avatars" />
+                app:srcCompat="@drawable/profile" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="userName"
                 android:id="@+id/MainUserName"
-                android:textSize="15sp"/>
+                android:textColor="@color/white"
+                android:textSize="22sp"/>
 
         </androidx.appcompat.widget.Toolbar>
-
 
         <com.google.android.material.tabs.TabLayout
             android:layout_width="match_parent"

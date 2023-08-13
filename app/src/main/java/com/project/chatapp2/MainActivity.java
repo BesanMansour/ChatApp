@@ -8,6 +8,7 @@ import androidx.fragment.app.FragmentPagerAdapter;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -61,10 +62,10 @@ public class MainActivity extends AppCompatActivity {
                         Glide.with(getBaseContext())
                                 .load(imageURL)
                                 .circleCrop()
-                                .error(R.drawable.ic_launcher_background)
+                                .error(R.mipmap.ic_launcher)
                                 .into(binding.MainProfileImage);
                     } else {
-                        binding.MainProfileImage.setImageResource(R.mipmap.ic_launcher);
+                        binding.MainProfileImage.setImageResource(R.drawable.profile);
                     }
                 }
             }
@@ -83,12 +84,17 @@ public class MainActivity extends AppCompatActivity {
                 int unread = 0;
                 for (DataSnapshot dataSnapshot : snapshot.getChildren()){
                     Chat chat = dataSnapshot.getValue(Chat.class);
+                    boolean e = chat != null && chat.getReceive() != null &&
+                            chat.getReceive().equals(firebaseUser.getUid()) &&
+                            !chat.isSeen();
+                    Log.e("chatUnread",e+"");
                     if (chat != null && chat.getReceive() != null &&
                             chat.getReceive().equals(firebaseUser.getUid()) &&
                             !chat.isSeen()) {
                         unread++;
                     }
                 }
+                Log.d("unread",unread+"");
                 if (unread == 0){
                     viewPagerAdapter.addFragment(new ChatsFragment(), "Chats");
                 } else {
@@ -107,6 +113,9 @@ public class MainActivity extends AppCompatActivity {
                             break;
                         case 1:
                             tab.setText("Users");
+                            break;
+                        case 2 :
+                            tab.setText("Profile");
                             break;
                         // قم بإضافة حالات أخرى إذا كنت تستخدم مزيد من الفراغات
                     }

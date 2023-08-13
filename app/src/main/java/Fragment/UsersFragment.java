@@ -101,7 +101,8 @@ public class UsersFragment extends Fragment {
                         Log.e("user", user.toString());
                     }
                 }
-                userAdapter = new UserAdapter(userList, getContext(), false);
+
+                userAdapter = new UserAdapter(userList, getContext(),false);
                 binding.UserRecycler.setLayoutManager(new LinearLayoutManager(getContext()));
                 binding.UserRecycler.setAdapter(userAdapter);
             }

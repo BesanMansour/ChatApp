@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -33,7 +34,7 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ImageHolder> {
 
     List<User> users;
     Context context;
-    private boolean isChat;
+    private boolean isChat = false;
     String theLastMsg;
     FirebaseUser firebaseUser;
 
@@ -54,38 +55,45 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ImageHolder> {
 
     @Override
     public void onBindViewHolder(@NonNull ImageHolder holder, int position) {
+        User user = users.get(holder.getAdapterPosition());
 
-        holder.userName.setText(users.get(holder.getAdapterPosition()).getUserName());
+        holder.userName.setText(user.getUserName());
 
-        Log.e("usersmf", users.get(holder.getAdapterPosition()).getUserName().toString());
-
-        if (users.get(holder.getAdapterPosition()).getImageURL().equals("default")) {
-            holder.img.setImageResource(R.mipmap.ic_launcher);
+        if (user.getImageURL().equals("default")) {
+            holder.img.setImageResource(R.drawable.user);
         } else {
             Glide.with(context)
-                    .load(users.get(holder.getAdapterPosition()).getImageURL())
+                    .load(user.getImageURL())
                     .circleCrop()
-                    .error(R.drawable.ic_launcher_background)
+                    .error(R.drawable.user)
                     .into(holder.img);
         }
 
-        if (isChat){
-            lastMsg(users.get(holder.getAdapterPosition()).getId(),holder.lat_msg);
-        }else {
+        if (isChat) {
+            holder.lat_msg.setVisibility(View.VISIBLE);
+            lastMsg(user.getId(), holder.lat_msg);
+        } else {
             holder.lat_msg.setVisibility(View.GONE);
         }
 
-        if (isChat) {
-            if (users.get(holder.getAdapterPosition()).getStatus().equals("online")) {
-                holder.img_on.setVisibility(View.VISIBLE);
-                holder.img_off.setVisibility(View.GONE);
-            } else {
-                holder.img_on.setVisibility(View.GONE);
-                holder.img_off.setVisibility(View.VISIBLE);
-            }
-        } else {
+//        if (isChat) {
+//            if (users.get(holder.getAdapterPosition()).getStatus() != null &&
+//                    users.get(holder.getAdapterPosition()).getStatus().equals("online")) {
+//                holder.img_on.setVisibility(View.VISIBLE);
+//                holder.img_off.setVisibility(View.GONE);
+//            } else {
+//                holder.img_on.setVisibility(View.GONE);
+//                holder.img_off.setVisibility(View.VISIBLE);
+//            }
+//        } else {
+//            holder.img_on.setVisibility(View.GONE);
+//            holder.img_off.setVisibility(View.GONE);
+//        }
+
+        if (user.getStatus() != null && user.getStatus().equals("online")) {
+            holder.img_on.setVisibility(View.VISIBLE);
+        } else{
             holder.img_on.setVisibility(View.GONE);
-            holder.img_off.setVisibility(View.GONE);
         }
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {
@@ -113,14 +121,13 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ImageHolder> {
             img = binding.ItemImg;
             userName = binding.ItemUserName;
             img_on = binding.ItemOn;
-            img_off = binding.ItemOff;
+//            img_off = binding.ItemOff;
             lat_msg = binding.ItemLastMsg;
 
         }
     }
 
-    // check last msg
-    private void lastMsg(final String userId, TextView last_msg) {
+    private void lastMsg(final String userId, final TextView last_msg) {
         theLastMsg = "default";
         firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
 
@@ -129,24 +136,34 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ImageHolder> {
         reference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
+                int unreadCount = 0; // تخزين عدد الرسائل غير المقروءة
                 for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
                     Chat chat = dataSnapshot.getValue(Chat.class);
 
-                    if (chat.getReceive().equals(firebaseUser.getUid()) && chat.getSender().equals(userId)
-                            || chat.getReceive().equals(userId) && chat.getSender().equals(firebaseUser.getUid())) {
-                        theLastMsg = chat.getMessage();
+                    if (chat.getReceive() != null && chat.getSender() != null
+                            && chat.getReceive().equals(firebaseUser.getUid())
+                            && chat.getSender().equals(userId)
+                            && !chat.isSeen()) {
+                        unreadCount++; // زيادة عدد الرسائل غير المقروءة
                     }
 
                 }
+                Log.e("unreadCount", unreadCount + "");
+
                 switch (theLastMsg) {
                     case "default":
-                        last_msg.setText("No message");
+                        last_msg.setText("");
                         break;
                     default:
                         last_msg.setText(theLastMsg);
                         break;
                 }
                 theLastMsg = "default";
+
+                if (unreadCount > 0) {
+                    last_msg.setText(unreadCount + " Unread"); // عرض عدد الرسائل غير المقروءة
+                }
+                Log.e("last_msg", last_msg + "");
             }
 
             @Override
@@ -154,7 +171,5 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ImageHolder> {
 
             }
         });
-
-
     }
 }

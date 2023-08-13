@@ -7,10 +7,13 @@
 
     <ImageView
         android:id="@+id/ItemImg"
-        android:layout_width="60dp"
-        android:layout_height="60dp"
-        android:background="@color/teal_200"
-        app:srcCompat="@drawable/ic_launcher_foreground" />
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/user" />
 
     <TextView
         android:id="@+id/ItemUserName"
@@ -21,6 +24,7 @@
         android:layout_toRightOf="@+id/ItemImg"
         android:layout_toEndOf="@id/ItemImg"
         android:layout_centerVertical="true"
+        android:textColor="@color/black"
         android:textSize="18sp"/>
 
     <de.hdodenhof.circleimageview.CircleImageView
@@ -33,35 +37,38 @@
         android:src="@mipmap/ic_launcher"
         android:layout_below="@id/ItemUserName"
         android:layout_marginTop="10dp"
-        android:layout_marginLeft="15dp"
+        android:layout_marginLeft="-10dp"
         android:layout_toRightOf="@+id/ItemImg"
         android:layout_toEndOf="@+id/ItemImg"/>
 
 
-    <de.hdodenhof.circleimageview.CircleImageView
-        android:id="@+id/ItemOff"
-        android:layout_width="15dp"
-        android:layout_height="15dp"
-        app:civ_border_width="10dp"
-        android:visibility="gone"
-        app:civ_border_color="#bfbfbf"
-        android:src="@mipmap/ic_launcher"
-        android:layout_below="@id/ItemUserName"
-        android:layout_marginTop="10dp"
-        android:layout_marginLeft="15dp"
-        android:layout_toRightOf="@+id/ItemImg"
-        android:layout_toEndOf="@+id/ItemImg"/>
+
+<!--    <de.hdodenhof.circleimageview.CircleImageView-->
+<!--        android:id="@+id/ItemOff"-->
+<!--        android:layout_width="15dp"-->
+<!--        android:layout_height="15dp"-->
+<!--        app:civ_border_width="10dp"-->
+<!--        android:visibility="gone"-->
+<!--        app:civ_border_color="#bfbfbf"-->
+<!--        android:src="@mipmap/ic_launcher"-->
+<!--        android:layout_below="@id/ItemUserName"-->
+<!--        android:layout_marginTop="10dp"-->
+<!--        android:layout_marginLeft="15dp"-->
+<!--        android:layout_toRightOf="@+id/ItemImg"-->
+<!--        android:layout_toEndOf="@+id/ItemImg"/>-->
 
     <TextView
         android:id="@+id/ItemLastMsg"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/ItemUserName"
-        android:layout_toRightOf="@+id/ItemImg"
-        android:layout_marginTop="5dp"
-        android:textColor="@color/black"
+        android:layout_alignParentEnd="true"
+        android:layout_marginStart="150dp"
         android:layout_marginLeft="20dp"
-        android:maxLines="1"
-        />
+        android:layout_marginTop="5dp"
+        android:layout_marginEnd="20dp"
+        android:layout_toEndOf="@+id/ItemUserName"
+        android:text="4 msg"
+        android:textColor="@color/black"
+        android:visibility="gone" />
 
 </RelativeLayout>

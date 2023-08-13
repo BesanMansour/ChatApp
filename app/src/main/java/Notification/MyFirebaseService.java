@@ -13,7 +13,6 @@ public class MyFirebaseService extends FirebaseMessagingService {
         // هنا يمكنك التعامل مع الـ FCM token الجديد
         // على سبيل المثال: إرساله إلى الخادم الخاص بك لتحديث الأجهزة المسجلة
         // أو تخزينه محليًا إذا لزم الأمر.
-
         FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
 
         if (firebaseUser != null){

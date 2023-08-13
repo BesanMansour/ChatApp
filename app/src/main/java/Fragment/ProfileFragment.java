@@ -104,8 +104,12 @@ public class ProfileFragment extends Fragment {
 
 
         // فيديو 11
-        if ( ContextCompat.checkSelfPermission( getContext() , Manifest.permission.READ_EXTERNAL_STORAGE ) != PackageManager.PERMISSION_GRANTED ) {
-            ActivityCompat.requestPermissions( getActivity() , new String[]{ Manifest.permission.READ_EXTERNAL_STORAGE } , IMAGE_REQUEST );
+        if ( ContextCompat.checkSelfPermission( getContext() ,
+                Manifest.permission.READ_EXTERNAL_STORAGE )
+                != PackageManager.PERMISSION_GRANTED ) {
+            ActivityCompat.requestPermissions( getActivity()
+                    , new String[]{ Manifest.permission.READ_EXTERNAL_STORAGE }
+                    , IMAGE_REQUEST );
         }
 
         ActivityResultLauncher< String > al1 = registerForActivityResult( new ActivityResultContracts.GetContent( ) , result -> {
